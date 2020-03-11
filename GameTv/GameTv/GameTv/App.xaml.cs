@@ -10,9 +10,12 @@ namespace GameTv
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            BuildDependencies();
         }
-
+        public void BuildDependencies()
+        {
+            ServiceLocator.Instance.Build();// Build Container
+        }
         protected override void OnStart()
         {
         }
