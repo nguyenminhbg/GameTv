@@ -8,19 +8,19 @@ namespace GameTv
     public class ServiceLocator
     {
         public static ServiceLocator Instance { get; } = new ServiceLocator();
-        private IContainer Container;
-        private ContainerBuilder containerBuider;
+        public IContainer Container { set; get; }
+        private ContainerBuilder _containerBuilder;
         public ServiceLocator()
         {
-            containerBuider = new ContainerBuilder();
+            _containerBuilder = new ContainerBuilder();
         }
-        public bool built;
+        public bool Built { get; private set; }
         public void Build()
         {
-            if (!built)
+            if (Built == false)
             {
-                Container = containerBuider.Build();
-                built = true;
+                Container = _containerBuilder.Build();
+                Built = true;
             }
         }
         public T Resolve<T>()
@@ -32,25 +32,33 @@ namespace GameTv
             return Container.Resolve(type);
         }
         public void RegisterInstance<TInterface, TImplementation>(TImplementation instance)
-         where TImplementation : class, TInterface
+        where TImplementation : class, TInterface
         {
-            containerBuider.RegisterInstance(instance).As<TInterface>();
+            _containerBuilder.RegisterInstance(instance).As<TInterface>();
         }
 
         public void RegisterInstance<TInterface, TImplementation>() where TImplementation : TInterface
         {
-            containerBuider.RegisterType<TImplementation>().As<TInterface>().SingleInstance();
+            _containerBuilder.RegisterType<TImplementation>().As<TInterface>().SingleInstance();
         }
 
         public void Register<TInterface, TImplementation>() where TImplementation : TInterface
         {
-            containerBuider.RegisterType<TImplementation>().As<TInterface>().InstancePerLifetimeScope();
+            _containerBuilder.RegisterType<TImplementation>().As<TInterface>().InstancePerLifetimeScope();
         }
 
         public void Register<T>() where T : class
         {
-            containerBuider.RegisterType<T>()
+            _containerBuilder.RegisterType<T>()
                 .InstancePerLifetimeScope();
+        }
+
+        public void RegisterViewModels()
+        {
+            _containerBuilder.RegisterAssemblyTypes(GetType().Assembly)
+                .Where(type => type.Name.EndsWith("ViewModel"))
+                .AsSelf()
+                .InstancePerDependency();
         }
     }
 }
