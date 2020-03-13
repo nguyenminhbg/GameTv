@@ -5,10 +5,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:iview="clr-namespace:GameTv.Views.IView"
              mc:Ignorable="d"
-             x:Class="GameTv.Views.Aoe.NewsAoeView">
+             x:Class="GameTv.Views.Aoe.NewsAoeHotView">
     <ContentPage.Content>
         <ListView RowHeight="135"
-                  ItemsSource="{Binding AoeNews}"
+                  ItemsSource="{Binding AoeHotNews}"
                   RefreshCommand="{Binding RefreshCommand}"
                   IsRefreshing="{Binding IsRefreshing, Mode=OneWay}"
                   IsPullToRefreshEnabled="True"

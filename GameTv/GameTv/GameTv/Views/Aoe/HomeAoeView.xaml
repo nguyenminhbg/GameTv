@@ -7,9 +7,15 @@
              x:Class="GameTv.Views.Aoe.HomeAoeView"
             xmlns:aoe="clr-namespace:GameTv.Views.Aoe"
             Title="AOE"
-            BarBackgroundColor="#103763">
+            xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
+            android:TabbedPage.BarSelectedItemColor="#009dfe"
+            android:TabbedPage.BarItemColor="#686868"
+            android:TabbedPage.ToolbarPlacement="Bottom">
     <TabbedPage.Children>
-        <aoe:VideoAoeView Title="Video"/>
+        
+   
         <aoe:NewsAoeView Title="Tin Tức"/>
+        <aoe:NewsAoeHotView Title="Tin Hot"/>
+        <aoe:NewsAoeScoreView Title="Tỉ số"/>
     </TabbedPage.Children>
 </TabbedPage>

@@ -7,29 +7,27 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
-using Xamarin.Forms;
 
 namespace GameTv.ViewModels.Aoe
 {
-    public class NewsAoeViewModel : ViewModelBase
+   public class NewsAoeHotViewModel : ViewModelBase
     {
-        private ObservableCollection<News> aoeNews;
-        public ObservableCollection<News> AoeNews
+        private ObservableCollection<News> aoeHotNews;
+        public ObservableCollection<News> AoeHotNews
         {
-            get => aoeNews; set { SetProperty(ref aoeNews, value); }
+            get => aoeHotNews; set { SetProperty(ref aoeHotNews, value); }
         }
-        public NewsAoeViewModel()
+        public NewsAoeHotViewModel()
         {
-            AoeNews = new ObservableCollection<News>();
+            AoeHotNews = new ObservableCollection<News>();
             IsRefreshing = true;
-            GetData(IndexPageNews);
+            GetNewsList(IndexPageNews);
         }
-        public void GetData(int indexPage)
+        public override void RefreshExecute()
         {
-            GetNewsList(indexPage);
+            base.RefreshExecute();
+            GetNewsList(IndexPageNews);
         }
         public override void SelectedExecute(News news)
         {
@@ -42,7 +40,7 @@ namespace GameTv.ViewModels.Aoe
         {
             try
             {
-                var html = "https://www.gametv.vn/aoe?page="+ indexPage;
+                var html = "https://www.gametv.vn/aoe?page=" + indexPage;
                 HtmlWeb web = new HtmlWeb();
                 HtmlDocument htmldoc = new HtmlAgilityPack.HtmlDocument();
                 var htmlDoc = await web.LoadFromWebAsync(html);
@@ -52,7 +50,7 @@ namespace GameTv.ViewModels.Aoe
                 var nodeTab3 = nodeTab2.LastOrDefault().Descendants("div").Where(t => t.GetAttributeValue("class", "") == "col-md-8 row-col");
                 if (indexPage == 1)
                 {
-                    AoeNews.Clear();
+                    AoeHotNews.Clear();
                     IsRefresh = false;
                 }
                 foreach (var item in nodeTab2)
@@ -69,19 +67,14 @@ namespace GameTv.ViewModels.Aoe
                 MessageDialog.ToastErrorLoad();
             }
         }
-        public override void RefreshExecute()
-        {
-            base.RefreshExecute();
-            GetNewsList(IndexPageNews);
-        }
         public void GetNewsListNode(HtmlNode htmlNode)
         {
-            var nodeDiv = htmlNode.ChildNodes.Descendants("div").Where(t => t.GetAttributeValue("class", "") == "row latest-news-col");
+            var nodeDiv = htmlNode.ChildNodes.Descendants("div").Where(t => t.GetAttributeValue("class", "") == "col-md-6 hot-news-col");
             for (int i = 0; i < nodeDiv.Count(); ++i)
             {
                 News myNews = new News();
-                var nodeDiv1 = htmlNode.ChildNodes.Descendants("div").Where(t => t.GetAttributeValue("class", "") == "col-md-5 row-col late-news-img");
-                var nodeDiv2 = htmlNode.ChildNodes.Descendants("div").Where(t => t.GetAttributeValue("class", "") == "col-md-7 row-col late-news-text");
+                var nodeDiv1 = htmlNode.ChildNodes.Descendants("div").Where(t => t.GetAttributeValue("class", "") == "col-md-6 hot-news-col");
+                var nodeDiv2 = htmlNode.ChildNodes.Descendants("div").Where(t => t.GetAttributeValue("class", "") == "col-md-6 hot-news-col");
                 var uri = nodeDiv1.ToArray()[i].Descendants("a").FirstOrDefault()?.GetAttributeValue("href", "");
                 if (!uri.Contains("https:"))
                 {
@@ -91,12 +84,12 @@ namespace GameTv.ViewModels.Aoe
                 myNews.Image = new Uri(nodeDiv1.ToArray()[i].Descendants("img").FirstOrDefault()
                        ?.GetAttributeValue("src", ""));
                 var a = nodeDiv1.ToArray()[i].Descendants("a").FirstOrDefault()?.GetAttributeValue("title", "Không lấy được Title");
-                var p = nodeDiv2.ToArray()[i].Descendants("p").Where(t => t.GetAttributeValue("class", "") == "news-summary").LastOrDefault().InnerText;
-                var time = nodeDiv2.ToArray()[i].Descendants("p").Where(t => t.GetAttributeValue("class", "") == "news-info").LastOrDefault().InnerText;
+             //   var p = nodeDiv2.ToArray()[i].Descendants("p").Where(t => t.GetAttributeValue("class", "") == "news-summary").LastOrDefault().InnerText;
+               // var time = nodeDiv2.ToArray()[i].Descendants("p").Where(t => t.GetAttributeValue("class", "") == "news-info").LastOrDefault().InnerText;
                 myNews.Title = a;
-                myNews.Content = p;
-                myNews.TimePost = time;
-                AoeNews.Add(myNews);
+               // myNews.Content = p;
+               // myNews.TimePost = time;
+                AoeHotNews.Add(myNews);
             }
         }
     }

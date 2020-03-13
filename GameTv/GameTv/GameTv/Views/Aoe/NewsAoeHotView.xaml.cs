@@ -1,5 +1,4 @@
-﻿using GameTv.Models;
-using GameTv.ViewModels.Aoe;
+﻿using GameTv.ViewModels.Aoe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,17 +11,16 @@ using Xamarin.Forms.Xaml;
 namespace GameTv.Views.Aoe
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class NewsAoeView : ContentPage
+    public partial class NewsAoeHotView : ContentPage
     {
-        public NewsAoeView()
+        public NewsAoeHotView()
         {
             InitializeComponent();
         }
-
         private void ListView_ItemAppearing(object sender, ItemVisibilityEventArgs e)
         {
-            var model = BindingContext as NewsAoeViewModel;
-            if(e.ItemIndex==model.AoeNews.Count - 2)
+            var model = BindingContext as NewsAoeHotViewModel;
+            if (e.ItemIndex == model.AoeHotNews.Count - 2)
             {
                 ++model.IndexPageNews;
                 model.GetNewsList(model.IndexPageNews);

@@ -76,7 +76,7 @@ namespace GameTv.Services.Navigation
 
         public Task NavigateToAsync<TViewModel>(NavigationParameters parameters) where TViewModel : ViewModelBase
         {
-            return NavigateToAsync(typeof(TViewModel), new NavigationParameters());
+            return NavigateToAsync(typeof(TViewModel), parameters);
         }
 
         public Task NavigateToAsync(Type viewModelType)
